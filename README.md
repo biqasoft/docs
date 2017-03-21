@@ -1,5 +1,3 @@
-# biqasoft.com documentation
-
 ![](logo.jpg?raw=true)
 
 ## Architecture overview
