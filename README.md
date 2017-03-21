@@ -1,76 +1,63 @@
+# biqasoft.com documentation
+
 ![](logo.jpg?raw=true)
 
-This is backend repository
-
 ## Architecture overview
- - frontend - [AngularJS](https://angularjs.org/)
- - client-server communication
+
+Client-server, REST; with SPA [AngularJS](https://angularjs.org/)
+
+## Links
+
+ - Task tracker [trello](https://trello.com/b/EdfoGUUe/biqasoft-com-dev-public) 
+
+## Microservices
+They can run independently
+
+Common all microservices technologies
 
 ### backend
- - Java 8 & [spring](https://spring.io/) 4.3 & [Spring Boot 1.4](http://projects.spring.io/spring-boot/)
+ - Java 8 & [spring](https://spring.io/) [Spring Boot](http://projects.spring.io/spring-boot/)
  - [Swagger](http://swagger.io/) generated from Spring MVC
  - [MongoDB](https://www.mongodb.com/) - database
  - multitenancy (db for every domain)
 
-## Microservices
-They can be independent run
+## microservices
+All  run on different port, by default, so you can run on local machine for development
 
-### [com.biqasoft.gateway](gateway)
- - port=8080
- - Public service
- - This is a main module. This is an API gateway for user requests Package com.biqasoft.gateway. `api.biqasoft.com`, - public api server, communicating with clients
-
-### [com.biqasoft.datasourcebatching](data-source-batching)
- - port=9090
- - Not public service
- - Periodically(CRON) update KPI, dataSource, leadGenProjects/methods and save to history
-
-### [com.biqasoft.control](control)
- - port=9091
- - Not public service
- - Internally system to control domains and users
-
-### [com.biqasoft.async](gateway-async)
- - Alpha
- - port=9096
- - Public service
- - Async API (websocket streaming API)
-
-### [com.biqasoft.database.backup](database-backup)
- - port=9095
- - Not public service
- - backup MongoDB database
-
-### [com.biqasoft.exporter](exporter)
- - port=10010
- - Not public service
- - Export html to pdf using phantomjs and pandoc
-
-### [com.biqasoft.exporter.excel](exporter-excel)
- - port=10015
- - Not public service
- - Export to excel
+ - [auth](https://github.com/biqasoft/auth-microservie)
+ - [databasebackup](https://github.com/biqasoft/databasebackup)
+ - [data-source](https://github.com/biqasoft/data-source-microservice)
+ - [manage](https://github.com/biqasoft/manage-microservices)
+ - [notification](https://github.com/biqasoft/notification-microservice)
+ - [exporter-excel](https://github.com/biqasoft/exporter-excel-microservice)
+ - [exporter](https://github.com/biqasoft/exporter-microservice)
+ - [gateway](https://github.com/biqasoft/gateway-microservice)
+ - [gateway-async](https://github.com/biqasoft/gateway-async-microservice)
+ - [frontend](https://github.com/biqasoft/frontend)
 
 ## Maven shared modules
-Modules used in another modules, not executable
+Modules used in different microservices
 
-### [com.biqasoft.entity](entity)
-Shared/common used object entities used across all projects. Http responses, DTO(Data Transfer Objects) and DAO
+ - [bindings-java](https://github.com/biqasoft/bindings-java)
+ - [infrastructure-java](https://github.com/biqasoft/infrastructure-java)
 
-### [com.biqasoft.common](common)
-Some spring services and other classes which is used across projects/modules
+### infrastructure-java module
 
-### [com.biqasoft.object-audit](object-audit)
-Add createdInfo (created by user and date) to objects. Common aspects, processing custom fields
+ - bpmn
+ - common; Some spring services and other classes which is used across projects/modules
+ - microservice-i18n
+ - microservice; Microservice common
+ - persistence; database, object audit: add createdInfo (created by user and date) to objects. Common aspects, processing custom fields
+ - base; This is parent module in project with dependency versions etc
+ - storage; Storage support such as Amazon S3, Google Drive, Dropbox, Webdav
 
-### com.biqasoft.base
-This is parent module in project with dependency versions etc...
-
-### [com.biqasoft.storage](storage)
-Storage support such as Amazon S3, Google Drive, Dropbox, Webdav
-
-### [com.biqasoft.microservice](microservice)
-Microservice common
+### bindings-java
+ 
+ - auth
+ - authmicroservicecommunication
+ - email-api
+ - entity-core
+ - entity; Shared/common used object entities used across all projects. Http responses, DTO(Data Transfer Objects) and DAO 
 
 ## Continuous Integration
 
@@ -95,9 +82,7 @@ Change version of module `mvn versions:set -DnewVersion=5.0.1-RELEASE`  set vers
 It will adjust all pom versions, parent versions and dependency versions in a multi-module project.
 
 If you made a mistake, do `mvn versions:revert` afterwards, or `mvn versions:commit`
-
 To install parent(root) module `mvn install -N` / `mvn deploy -N`
- 
 You can deploy to artifactory (binary repo) using `mvn deploy` in every project 
 
 ## Build & Run
@@ -113,12 +98,10 @@ You can deploy to artifactory (binary repo) using `mvn deploy` in every project
 #### Mandatory
  - `--spring.cloud.consul.host=192.168.127.131` replace with address of consul
  - `spring.profiles.active=development` or `spring.profiles.active=production` for configuration
- - [mailgun](https://www.mailgun.com) credentials (send email messages with DKIM and spam filter)
  - AWS S3 (file storage)
 
 | Option                                           | example                                           | mandatory | description                                                                                                                                                                                             |
 | ------------------------------------------------ | ------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
-| biqa.security.global.root.enable                 |   TRUE                                            |    no     | this allow root user auth with `biqa.security.global.root.password` password. Disabled by default |
 | biqa.internal.exception.strategy                 |   PRINT_STACKTRACE                                |    no     | values `PRINT_STACKTRACE` or `DO_NOT_PRINT` described in ThrowExceptionHelper.class. Print stack trace on user failed responses because of invalid request data. `DO_NOT_PRINT` by default.             |
 | biqa.REQUIRE_ALL                                 |   TRUE                                            |    no     | some modules such as google drive, dropbox and some other are optional and work when you set up properties for them(such as api keys etc), so you can run system without them. But if you want to start with all modules, cou can force it|
 | biqa.urls.http.cloud                             |   https://cloud.biqasoft.com                      |    yes    | |
@@ -126,16 +109,6 @@ You can deploy to artifactory (binary repo) using `mvn deploy` in every project
 | biqa.urls.email.support                          |   support@biqasoft.com                            |    yes    | |
 | biqa.notification.email.sender.email             |   info@biqasoft.com                               |    yes    | |
 | biqa.notification.header.system                  |   biqasoft.com                                    |    yes    | |
-| mailgun.api.key                                  |   key-1812b2569a3d7923a5ed5                       |    yes    | |
-| mailgun.api.url                                  |   https://api.mailgun.net/v2/example.com/messages |    yes    | |
-
-
-##### API Gateway
-
-| Option                                           | example                                           | mandatory | description                                                                                                                                                                                             |
-| ------------------------------------------------ | ------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
-| biqa.urls.http.async                             |   http://localhost:9096                           |    yes    | async gateway url |
-
 
 ##### Profiles
 You `must` manually specify profile to run every microservice or program startup will fail
@@ -167,26 +140,11 @@ Spring actuator for main API url is `/internal`
 
  - All microservices and gateway have Swagger `http://localhost:8080/v2/api-docs`
 
-## Auth
+## Auth API
 
  - you can auth with basic auth (username/token and password) as http header
  - send auth as param `http://api-server/v1/myaccount?token=T0FVVEgyX3JuaWspYmcsNitiWy0xPHoqY3UwOnc8Nih3NzAwNmcsdD44PyElW10t` where token is Base64.encode(`username:password`)
-
-### API
- - basic auth is used (Authorization header with base64)
- - password can be used; tokens(generated by OAuth2 apps) can be used
- - passwords are hashed with bcrypt2
-
-###
-`LocalAuthenticationProvider.java` auth provider
-
-### Root user auth
-
-This feature allow to be authenticated under any user with special password. Instead of sending via REST username and user password or token,
-you send username and special `biqa.security.global.root.password` as password.
-
-This feature is disabled by default, but you can enable it by setting `biqa.security.global.root.enable` to `TRUE`.
-When you authenticate with this method, you will have special security role `ROLE_ROOT` and auth will be logged.
+ - In Java Spring Security `GatewayAuthenticationProvider.java` auth provider which dispose to microservice authenticator
 
 ### Java 9
  - to fix spring add `-addmods java.xml.bind` as VM options.
@@ -197,10 +155,14 @@ When you authenticate with this method, you will have special security role `ROL
 
  - [ascii banner generator](http://patorjk.com/software/taag/#p=display&f=Big&t=biqasoft.com)
 
-### DevOps
+## Run
 
-1) run consul `docker run --name=consul -d  -p 8400:8400 -p 8500:8500 -p 8600:53/udp -h node1 progrium/consul -server -bootstrap -ui-dir /ui`
-2) for development run docker gliderlabs/registrator for consul
+You should replacce folders, network interfaces to your
+
+### Docker
+
+1) run consul `docker run -d --net=host --name=consul -e 'CONSUL_LOCAL_CONFIG={"skip_leave_on_interrupt": true}' -e -client=0.0.0.0 -e 'CONSUL_BIND_INTERFACE=ens33' consul agent -server -ui -bootstrap`
+2) for development run docker [gliderlabs/registrator](http://gliderlabs.com/registrator/latest/user/quickstart/) for consul
 
 ```bash
 docker run -d \
@@ -259,12 +221,3 @@ further for development example run `docker start consul registrator db-tenant-1
 | LICENSE.txt	     |   Project's license                          |
 | NOTICE.txt	     |   Notices and attributions                   |
 | README.txt	     |   Project's readme                           |
-
-### Error levels logging
-
- - Trace - Only when I would be "tracing" the code and trying to find one part of a function specifically
- - Debug - Information that is diagnostically helpful to people more than just developers (IT, sysadmins, etc)
- - Info  - Generally useful information to log (service start/stop, configuration assumptions, etc). Info I want to always have available but usually dont care about under normal circumstances. This is my out-of-the-box config level
- - Warn  - Anything that can potentially cause application oddities, but for which I am automatically recoverring (such as switching from a primary to backup server, retrying an operation, missing secondary data, etc)
- - Error - Any error which is fatal to the operation but not the service or application (cant open a required file, missing data, etc). These errors will force user (administrator, or direct user) intervention. These are usually reserved (in my apps) for incorrect connection strings, missing services, etc.
- - Fatal - Any error that is forcing a shutdown of the service or application to prevent data loss (or further data loss). I reserve these only for the most heinous errors and situations where there is guaranteed to have been data corruption or loss.
