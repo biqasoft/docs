@@ -62,34 +62,8 @@ Modules used in different microservices
  - [ci.sh](ci.sh) for production CI server
  - [ci-local.sh](ci-local.sh) for local developments and local tests
 
-## Maven usage
-All poms have one version (parent)
-
- - `https://maven.apache.org/guides/mini/guide-deployment-security-settings.html`
- - `https://maven.apache.org/settings.html`
-
-## Project structure notes 
-
-#### Change version
-
-Version semantic `$YEAR$.$MONTH$.$MINOR_VERSION$`. For example if current month is 7 and year is 2016, version can be `2016.7.9`
-
-Use versions:set from the versions-maven plugin:
-
-Change version of module `mvn versions:set -DnewVersion=5.0.1-RELEASE`  set version for root (parent) module
-It will adjust all pom versions, parent versions and dependency versions in a multi-module project.
-
-If you made a mistake, do `mvn versions:revert` afterwards, or `mvn versions:commit`
-To install parent(root) module `mvn install -N` / `mvn deploy -N`
-You can deploy to artifactory (binary repo) using `mvn deploy` in every project 
-
-## Build & Run
+## Run
 `StartApplication.java` - start class for Spring Boot
-
-### Compiling & running steps
- - In project folder with `pom.xml` file run `mvn package`. You will have `*.jar` in `./target` folder.
- - run development environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=development --spring.cloud.consul.host=192.168.127.131`
- - or run production environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=production  --spring.cloud.consul.host=some_local_consul_agent.server`
 
 ### Running params
 
@@ -199,6 +173,39 @@ minio/minio /export
 ```
 
 further for development example run `docker start consul registrator db-tenant-1 db-users`
+
+## Build own
+
+Current build steps for java-infrastructure and java-binding is compilcated and will be refactored.
+Currently to build all modules, you should build in following order
+
+![](images/build_steps_java_infra.png?raw=true)
+
+### Compiling & running steps
+ - In project folder with `pom.xml` file run `mvn package`. You will have `*.jar` in `./target` folder.
+ - run development environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=development --spring.cloud.consul.host=192.168.127.131`
+ - or run production environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=production  --spring.cloud.consul.host=some_local_consul_agent.server`
+
+## Maven usage
+All poms have one version (parent)
+
+ - `https://maven.apache.org/guides/mini/guide-deployment-security-settings.html`
+ - `https://maven.apache.org/settings.html`
+
+## Project structure notes 
+
+#### Change version
+
+Version semantic `$YEAR$.$MONTH$.$MINOR_VERSION$`. For example if current month is 7 and year is 2016, version can be `2016.7.9`
+
+Use versions:set from the versions-maven plugin:
+
+Change version of module `mvn versions:set -DnewVersion=5.0.1-RELEASE`  set version for root (parent) module
+It will adjust all pom versions, parent versions and dependency versions in a multi-module project.
+
+If you made a mistake, do `mvn versions:revert` afterwards, or `mvn versions:commit`
+To install parent(root) module `mvn install -N` / `mvn deploy -N`
+You can deploy to artifactory (binary repo) using `mvn deploy` in every project 
 
 ### Maven Standard Directory Layout
 
