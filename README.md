@@ -20,7 +20,7 @@ Common all microservices technologies
  - multitenancy (db for every domain)
 
 ## microservices
-All  run on different port, by default, so you can run on local machine for development
+All run on different port, by default, so you can run on local machine for development. All have [docker packages on docker hub](https://hub.docker.com/r/biqasoft/)
 
  - [auth](https://github.com/biqasoft/auth-microservie)
  - [databasebackup](https://github.com/biqasoft/databasebackup)
