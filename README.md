@@ -34,7 +34,7 @@ All run on different port, by default, so you can run on local machine for devel
  - [frontend](https://github.com/biqasoft/frontend)
 
 ## Maven shared modules
-Modules used in different microservices
+Modules used in different microservices; `NOTE` currently, they must use the same version
 
  - [bindings-java](https://github.com/biqasoft/bindings-java)
  - [infrastructure-java](https://github.com/biqasoft/infrastructure-java)
@@ -56,11 +56,6 @@ Modules used in different microservices
  - email-api
  - entity-core
  - entity; Shared/common used object entities used across all projects. Http responses, DTO(Data Transfer Objects) and DAO 
-
-## Continuous Integration
-
- - [ci.sh](ci.sh) for production CI server
- - [ci-local.sh](ci-local.sh) for local developments and local tests
 
 ## Run
 `StartApplication.java` - start class for Spring Boot
@@ -99,7 +94,7 @@ just common argument to use local proxy for JVM (port 9999)
 ## Server metrics
 
 You can get metrics provided by `spring boot actuator`. see `http://docs.spring.io/spring-boot/docs/current/reference/html/production-ready-endpoints.html`
-!!! WARNING !!! Every microservice with REST have `/health` endpoint. 
+`NOTE` Every microservice with REST have `/health` endpoint. 
 This endpoint have sensitive information and user should not have access to it(firewall or smth else should do it).
 Spring actuator for main API url is `/internal`
 
@@ -129,7 +124,7 @@ Spring actuator for main API url is `/internal`
 
 ## Run
 
-You should replacce folders, network interfaces to your
+You should replace folders, network interfaces to your
 
 ### Docker
 
@@ -159,6 +154,10 @@ docker run --name=db-tenant-1 -d -p 27019:27017 -v /home/microservices/tenant-1/
 db.createUser({user: "3rTbIgJ2btIy8xWxAiFiSW8394Om11mSkZdHsdKr", pwd: "nusZHFul8bt0mKZKmLsHXjvmcQ88Ra4mhlURxiEM", roles: [ { role: "root", db: "admin" } ] } )
 ```
 
+`NOTE`:
+ - most of microservices require mongodb; insted of running your own mongodb instances, you can use [mongodb atlas](https://www.mongodb.com/cloud/atlas/pricing)
+ - all microservices require connection to consul
+
 ### Optional
 
 #### Run S3-compatible API server
@@ -187,14 +186,11 @@ Currently to build all modules, you should build in following order
  - or run production environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=production  --spring.cloud.consul.host=some_local_consul_agent.server`
 
 ## Maven usage
-All poms have one version (parent)
+All poms have one parent with common libs versions
 
- - `https://maven.apache.org/guides/mini/guide-deployment-security-settings.html`
- - `https://maven.apache.org/settings.html`
+#### Versioning
 
-## Project structure notes 
-
-#### Change version
+##### Microservices
 
 Version semantic `$YEAR$.$MONTH$.$MINOR_VERSION$`. For example if current month is 7 and year is 2016, version can be `2016.7.9`
 
@@ -206,6 +202,15 @@ It will adjust all pom versions, parent versions and dependency versions in a mu
 If you made a mistake, do `mvn versions:revert` afterwards, or `mvn versions:commit`
 To install parent(root) module `mvn install -N` / `mvn deploy -N`
 You can deploy to artifactory (binary repo) using `mvn deploy` in every project 
+
+##### Libs
+
+For libs, such as:
+
+ - [bindings-java](https://github.com/biqasoft/bindings-java)
+ - [infrastructure-java](https://github.com/biqasoft/infrastructure-java)
+
+[semver](http://semver.org/) is used
 
 ### Maven Standard Directory Layout
 
