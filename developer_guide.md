@@ -32,7 +32,7 @@ builderService.updateToDBDefaultBiqa(company);
 
 #####  @BiqaAddObject
 Аннотация вещающая на функции, в результате - вызывается функция (аспект - com.biqasoft.gateway.system.BeforeObjectAdd),
-добавляющая createdInfo и domain к входным аргументам biqaAbstract.
+добавляющая createdInfo и domainDto к входным аргументам biqaAbstract.
 Используется в репозиториях перед добавлением в БД данных в первый раз
 
 ```java
@@ -45,7 +45,7 @@ public Customer addCustomer(Customer customer) {...}
 ##### Дата создания и кто создал
 `CreatedInfo createdInfo = new CreatedInfo( new Date() , currentUser.getCurrentUser().getId()  );`
 
-#### Get current user domain
+#### Get current user domainDto
 
 ```java
 @Autowired

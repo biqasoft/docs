@@ -17,7 +17,7 @@ Common all microservices technologies
  - Java 8 & [spring](https://spring.io/) [Spring Boot](http://projects.spring.io/spring-boot/)
  - [Swagger](http://swagger.io/) generated from Spring MVC
  - [MongoDB](https://www.mongodb.com/) - database
- - multitenancy (db for every domain)
+ - multitenancy (db for every domainDto)
 
 ## microservices
 All run on different port, by default, so you can run on local machine for development. All have [docker packages on docker hub](https://hub.docker.com/r/biqasoft/)
@@ -57,6 +57,32 @@ Modules used in different microservices; `NOTE` currently, they must use the sam
  - entity-core
  - entity; Shared/common used object entities used across all projects. Http responses, DTO(Data Transfer Objects) and DAO 
 
+### Install
+go to
+/d/github-repos/biqasoft/infrastructure-java
+
+ensure that you have java 10
+```bash
+export JAVA_HOME="C:\Program Files\Java\jdk-10"
+```
+
+set version of platform
+```bash
+export PROJECT_VERSION=2018.7.0
+```
+
+then in console execute script
+
+```bash
+./ci.sh dev
+```
+
+then go to  /cygdrive/d/github-repos/biqasoft/bindings-java and also execute
+
+```bash
+mvn clean install
+```
+
 ## Run
 `StartApplication.java` - start class for Spring Boot
 
@@ -69,7 +95,6 @@ Modules used in different microservices; `NOTE` currently, they must use the sam
 
 | Option                                           | example                                           | mandatory | description                                                                                                                                                                                             |
 | ------------------------------------------------ | ------------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------- |
-| biqa.internal.exception.strategy                 |   PRINT_STACKTRACE                                |    no     | values `PRINT_STACKTRACE` or `DO_NOT_PRINT` described in ThrowExceptionHelper.class. Print stack trace on user failed responses because of invalid request data. `DO_NOT_PRINT` by default.             |
 | biqa.REQUIRE_ALL                                 |   TRUE                                            |    no     | some modules such as google drive, dropbox and some other are optional and work when you set up properties for them(such as api keys etc), so you can run system without them. But if you want to start with all modules, cou can force it|
 | biqa.urls.http.cloud                             |   https://cloud.biqasoft.com                      |    yes    | |
 | biqa.urls.http.support                           |   https://support.biqasoft.com                    |    yes    | |
