@@ -34,7 +34,7 @@ All run on different port, by default, so you can run on local machine for devel
  - [frontend](https://github.com/biqasoft/frontend)
 
 ## Maven shared modules
-Modules used in different microservices; `NOTE` currently, they must use the same version
+Modules used in different microservices; `NOTE` currently, they must use the same version. Also for these libs [semver](http://semver.org/) is used instead of month/year versioning
 
  - [bindings-java](https://github.com/biqasoft/bindings-java)
  - [infrastructure-java](https://github.com/biqasoft/infrastructure-java)
@@ -57,31 +57,39 @@ Modules used in different microservices; `NOTE` currently, they must use the sam
  - entity-core
  - entity; Shared/common used object entities used across all projects. Http responses, DTO(Data Transfer Objects) and DAO 
 
-### Install
-go to
-/d/github-repos/biqasoft/infrastructure-java
+### Build
 
-ensure that you have java 10
+ 1) Download xml for commandline `http://xmlstar.sourceforge.net/download.php`
+ 2) go to infrastructure-java folder e.g. `/d/github-repos/biqasoft/infrastructure-java`
+ 3) ensure that you have java 10
 ```bash
 export JAVA_HOME="C:\Program Files\Java\jdk-10"
 ```
-
-set version of platform
+4) set desired version of platform
 ```bash
 export PROJECT_VERSION=2018.7.0
 ```
 
-then in console execute script
+5) In console execute script
 
 ```bash
 ./ci.sh dev
 ```
 
-then go to  /cygdrive/d/github-repos/biqasoft/bindings-java and also execute
+6) Go to `bindings-java` folder e.g `/cygdrive/d/github-repos/biqasoft/bindings-java` and also execute
 
 ```bash
 mvn clean install
 ```
+
+*You have build base modules and can build other microservices*
+
+### Compiling & running microservices
+ - In project folder with `pom.xml` file run `mvn package`. You will have `*.jar` in `./target` folder.
+ - run development environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=development`
+ - or run production environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=production`
+ 
+(It's expected that you have running consul on localhost otherwise specify consul by `--spring.cloud.consul.host`)
 
 ## Run
 `StartApplication.java` - start class for Spring Boot
@@ -89,7 +97,6 @@ mvn clean install
 ### Running params
 
 #### Mandatory
- - `--spring.cloud.consul.host=192.168.127.131` replace with address of consul
  - `spring.profiles.active=development` or `spring.profiles.active=production` for configuration
  - AWS S3 (file storage)
 
@@ -138,18 +145,13 @@ Spring actuator for main API url is `/internal`
  - send auth as param `http://api-server/v1/myaccount?token=T0FVVEgyX3JuaWspYmcsNitiWy0xPHoqY3UwOnc8Nih3NzAwNmcsdD44PyElW10t` where token is Base64.encode(`username:password`)
  - In Java Spring Security `GatewayAuthenticationProvider.java` auth provider which dispose to microservice authenticator
 
-### Java 9
- - to fix spring add `-addmods java.xml.bind` as VM options.
- - to fix aspectj aop see `com.biqasoft.common.hacks.Java9Fix` (org.aspectj.util.LangUtil line ~59 works incorrectly with jdk9 eap build) 
- - to run tests `env JAVA_HOME="C:\Program Files\Java\jdk-9" JRE_HOME="C:\Program Files\Java\jre-9" mvn package -Pjdk9` - and see maven profile jdk9
-
 ### Other
 
  - [ascii banner generator](http://patorjk.com/software/taag/#p=display&f=Big&t=biqasoft.com)
 
 ## Run
 
-You should replace folders, network interfaces to your
+(replace folders, network interfaces to your)
 
 ### Docker
 
@@ -204,18 +206,6 @@ minio/minio /export
 
 further for development example run `docker start consul registrator db-tenant-1 db-users`
 
-## Build own
-
-Current build steps for java-infrastructure and java-binding is compilcated and will be refactored.
-Currently to build all modules, you should build in following order
-
-![](images/build_steps_java_infra.png?raw=true)
-
-### Compiling & running steps
- - In project folder with `pom.xml` file run `mvn package`. You will have `*.jar` in `./target` folder.
- - run development environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=development --spring.cloud.consul.host=192.168.127.131`
- - or run production environment with `java -jar api.biqasoft.com.jar --spring.profiles.active=production  --spring.cloud.consul.host=some_local_consul_agent.server`
-
 ## Maven usage
 All poms have one parent with common libs versions
 
@@ -233,15 +223,6 @@ It will adjust all pom versions, parent versions and dependency versions in a mu
 If you made a mistake, do `mvn versions:revert` afterwards, or `mvn versions:commit`
 To install parent(root) module `mvn install -N` / `mvn deploy -N`
 You can deploy to artifactory (binary repo) using `mvn deploy` in every project 
-
-##### Libs
-
-For libs, such as:
-
- - [bindings-java](https://github.com/biqasoft/bindings-java)
- - [infrastructure-java](https://github.com/biqasoft/infrastructure-java)
-
-[semver](http://semver.org/) is used
 
 ### Maven Standard Directory Layout
 
