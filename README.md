@@ -14,9 +14,9 @@ They can run independently
 Common all microservices technologies
 
 ### backend
- - Java 8 & [spring](https://spring.io/) [Spring Boot](http://projects.spring.io/spring-boot/)
+ - Java 10 & [Spring Boot 2](http://projects.spring.io/spring-boot/)
  - [Swagger](http://swagger.io/) generated from Spring MVC
- - [MongoDB](https://www.mongodb.com/) - database
+ - [MongoDB 4](https://www.mongodb.com/) - database
  - multitenancy (db for every domainDto)
 
 ## microservices
@@ -165,12 +165,18 @@ docker run -d \
     -ip="192.168.1.86" consul://localhost:8500
 ```
 
-3) Run users microservice
+3) Run users microservice db and set authentication database in consul K/V or environment variable to "test" database
 ```bash
 # users
-docker run --name=db-users -d -p 27018:27017 -v /home/microservices/users/mongodb/data:/data/db -P -e "SERVICE_NAME=db-users" biqasoft/mongodb:3.4.1
-db.createUser({user: "v2jGUCHOtqfzahgDH6p27pzmUq8MtyqKCnXkQyiz", pwd: "@FU%1QOe>sz5Y,gmy9gvc?sYBg%Bf4xhRk^aSa", roles: [ { role: "root", db: "admin" } ] } )
+docker run --name=db-users -d -p 27018:27017 -v /home/microservices/users/mongodb/data:/data/db -P -e "SERVICE_NAME=db-users" -e "MONGO_INITDB_ROOT_USERNAME=v2jGUCHOtqfzahgDH6p27pzmUq8MtyqKCnXkQyiz" -e "MONGO_INITDB_ROOT_PASSWORD= @FU%1QOe>sz5Y,gmy9gvc?sYBg%Bf4xhRk^aSa" mongo:latest mongod --auth
 ```
+
+You can also create another user like that
+
+```bash
+ db.createUser({user: "v2jGUCHOtqfzahgDH6p27pzmUq8MtyqKCnXkQyiz11", mechanisms: ["SCRAM-SHA-1"], pwd: "567", roles: [ { role: "root", db: "admin" } ] } )
+```
+
 4) Run main tenant database storage
 
 ```bash
